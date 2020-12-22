@@ -54,7 +54,12 @@ void WorkerView::SendComponentUpdate(Worker_EntityId EntityId, ComponentUpdate U
 		ComponentData* Component = Element->Components.FindByPredicate(ComponentIdEquality{ Update.GetComponentId() });
 		if (Component != nullptr)
 		{
-			Component->ApplyUpdate(Update);
+			uint8_t Result = Component->ApplyUpdate(Update);
+			if (1 != Result)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("ApplyUpdate failed, component not in view: entity %lld component %d result %d error %s"),
+					   EntityId, Update.GetComponentId(), Result,  Schema_GetError(Component->GetFields()));
+			}
 		}
 		else
 		{

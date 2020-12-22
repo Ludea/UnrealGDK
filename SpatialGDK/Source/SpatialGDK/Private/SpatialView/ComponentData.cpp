@@ -34,12 +34,12 @@ Schema_ComponentData* ComponentData::Release() &&
 	return Data.Release();
 }
 
-bool ComponentData::ApplyUpdate(const ComponentUpdate& Update)
+uint8_t ComponentData::ApplyUpdate(const ComponentUpdate& Update)
 {
 	check(Update.GetComponentId() == GetComponentId());
 	check(Update.GetUnderlying() != nullptr);
 
-	return Schema_ApplyComponentUpdateToData(Update.GetUnderlying(), Data.Get()) != 0;
+	return Schema_ApplyComponentUpdateToData(Update.GetUnderlying(), Data.Get());
 }
 
 Schema_Object* ComponentData::GetFields() const

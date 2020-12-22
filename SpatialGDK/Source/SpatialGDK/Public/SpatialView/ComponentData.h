@@ -51,7 +51,7 @@ public:
 	// Returns true if the update was successfully applied and false otherwise.
 	// This will cause the size of the component data to increase.
 	// To resize use DeepCopy to create a new data object with the serialized size of the data.
-	bool ApplyUpdate(const ComponentUpdate& Update);
+	uint8_t ApplyUpdate(const ComponentUpdate& Update);
 
 	Schema_Object* GetFields() const;
 
