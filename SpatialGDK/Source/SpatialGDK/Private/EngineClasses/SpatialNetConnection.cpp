@@ -146,8 +146,8 @@ void USpatialNetConnection::SetHeartbeatTimeoutTimer()
 	Timeout = GetDefault<USpatialGDKSettings>()->HeartbeatTimeoutWithEditorSeconds;
 #endif
 
-	UE_LOG(LogSpatialNetConnection, Log, TEXT("Server received heartbeat: NetConnection %s, PlayerController entity %lld"), *GetName(),
-		   PlayerControllerEntity);
+	UE_LOG(LogSpatialNetConnection, Log, TEXT("Server received heartbeat: NetConnection %s, PlayerController entity %lld Timer:%s"),
+		   *GetName(), PlayerControllerEntity, *HeartbeatTimer.ToString());
 
 	TimerManager->SetTimer(
 		HeartbeatTimer,
@@ -156,8 +156,8 @@ void USpatialNetConnection::SetHeartbeatTimeoutTimer()
 			{
 				// This client timed out. Disconnect it and trigger OnDisconnected logic.
 				UE_LOG(LogSpatialNetConnection, Warning,
-					   TEXT("Client timed out - destroying connection: NetConnection %s, PlayerController entity %lld"),
-					   *Connection->GetName(), Connection->PlayerControllerEntity);
+					   TEXT("Client timed out - destroying connection: NetConnection %s, PlayerController entity %lld Timer:%s"),
+					   *Connection->GetName(), Connection->PlayerControllerEntity, *Connection->HeartbeatTimer.ToString());
 				Connection->CleanUp();
 			}
 		},
@@ -207,6 +207,8 @@ void USpatialNetConnection::DisableHeartbeat()
 	// Remove the heartbeat callback
 	if (TimerManager != nullptr && HeartbeatTimer.IsValid())
 	{
+		UE_LOG(LogSpatialNetConnection, Log, TEXT("DisableHeartbeat: NetConnection %s, PlayerController entity %lld Timer:%s"), *GetName(),
+			   PlayerControllerEntity, *HeartbeatTimer.ToString());
 		TimerManager->ClearTimer(HeartbeatTimer);
 	}
 	PlayerControllerEntity = SpatialConstants::INVALID_ENTITY_ID;
