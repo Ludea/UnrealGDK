@@ -6,7 +6,6 @@
 #include "Engine/World.h"
 #include "TestOnAuthorityGainedPawn.generated.h"
 
-
 DECLARE_LOG_CATEGORY_EXTERN(LogTestOnAuthorityGainedPawn, Log, All);
 
 UCLASS()
@@ -21,6 +20,7 @@ private:
 	int32 OnAuthorityGainedOrder;
 
 	static int32 StaticOrder;
+
 public:
 	ATestOnAuthorityGainedPawn();
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;

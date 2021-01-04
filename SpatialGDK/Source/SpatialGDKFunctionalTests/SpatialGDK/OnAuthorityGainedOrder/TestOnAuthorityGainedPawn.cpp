@@ -1,9 +1,8 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
 #include "TestOnAuthorityGainedPawn.h"
-#include "SpatialTestOnAuthorityGainedOrder.h"
 #include "Net/UnrealNetwork.h"
-
+#include "SpatialTestOnAuthorityGainedOrder.h"
 
 int32 ATestOnAuthorityGainedPawn::StaticOrder = 0;
 
@@ -25,7 +24,7 @@ void ATestOnAuthorityGainedPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProp
 void ATestOnAuthorityGainedPawn::OnAuthorityGained()
 {
 	Super::OnAuthorityGained();
-	OnAuthorityGainedOrder = ++ StaticOrder;
+	OnAuthorityGainedOrder = ++StaticOrder;
 	UE_LOG(LogTestOnAuthorityGainedPawn, Log, TEXT("%s OnAuthorityGained: ExpectedOrder:%d OnAuthorityGainedOrder:%d"), *GetName(),
 		   ExpectedOrder, OnAuthorityGainedOrder);
 }
@@ -33,8 +32,7 @@ void ATestOnAuthorityGainedPawn::OnAuthorityGained()
 void ATestOnAuthorityGainedPawn::SetExpectedOrder(int32 InOrder)
 {
 	ExpectedOrder = InOrder;
-	UE_LOG(LogTestOnAuthorityGainedPawn, Log, TEXT("%s SetExpectedOrder: ExpectedOrder:%d"), *GetName(),
-		   ExpectedOrder);
+	UE_LOG(LogTestOnAuthorityGainedPawn, Log, TEXT("%s SetExpectedOrder: ExpectedOrder:%d"), *GetName(), ExpectedOrder);
 }
 
 void ATestOnAuthorityGainedPawn::ResetStaticOrder()
