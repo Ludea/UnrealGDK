@@ -98,7 +98,7 @@ EPushRPCResult SpatialRPCService::PushRPC(const Worker_EntityId EntityId, const 
 			if (EventTracer != nullptr)
 			{
 				PendingPayload.SpanId =
-				EventTracer->TraceEvent(FSpatialTraceEventBuilder::CreateQueueRPC(), PendingPayload.SpanId.GetConstId(), 1);
+					EventTracer->TraceEvent(FSpatialTraceEventBuilder::CreateQueueRPC(), PendingPayload.SpanId.GetConstId(), 1);
 			}
 
 			// Already has queued RPCs of this type, queue until those are pushed.

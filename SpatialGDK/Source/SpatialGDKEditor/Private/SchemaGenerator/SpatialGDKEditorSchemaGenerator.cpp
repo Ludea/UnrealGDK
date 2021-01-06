@@ -650,6 +650,42 @@ void WriteServerAuthorityComponentSet(const USchemaDatabase* SchemaDatabase, TAr
 	Writer.WriteToFile(FString::Printf(TEXT("%sComponentSets/ServerAuthoritativeComponentSet.schema"), *SchemaOutputPath));
 }
 
+void WriteRoutingWorkerAuthorityComponentSet()
+{
+	const FString SchemaOutputPath = GetDefault<USpatialGDKEditorSettings>()->GetGeneratedSchemaOutputFolder();
+
+	FCodeWriter Writer;
+	Writer.Printf(R"""(
+		// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+		// Note that this file has been generated automatically
+		package unreal.generated;)""");
+	Writer.PrintNewLine();
+
+	// Write all import statements.
+	for (const auto& WellKnownSchemaImport : SpatialConstants::RoutingWorkerSchemaImports)
+	{
+		Writer.Printf("import \"{0}\";", WellKnownSchemaImport);
+	}
+
+	Writer.PrintNewLine();
+	Writer.Printf("component_set {0} {", SpatialConstants::ROUTING_WORKER_COMPONENT_SET_NAME).Indent();
+	Writer.Printf("id = {0};", SpatialConstants::ROUTING_WORKER_AUTH_COMPONENT_SET_ID);
+	Writer.Printf("components = [").Indent();
+
+	// Write all import components.
+	for (const auto& WellKnownComponent : SpatialConstants::RoutingWorkerComponents)
+	{
+		Writer.Printf("{0},", WellKnownComponent.Value);
+	}
+
+	Writer.RemoveTrailingComma();
+
+	Writer.Outdent().Print("];");
+	Writer.Outdent().Print("}");
+
+	Writer.WriteToFile(FString::Printf(TEXT("%sComponentSets/RoutingWorkerAuthoritativeComponentSet.schema"), *SchemaOutputPath));
+}
+
 void WriteClientAuthorityComponentSet()
 {
 	const FString SchemaOutputPath = GetDefault<USpatialGDKEditorSettings>()->GetGeneratedSchemaOutputFolder();
@@ -861,6 +897,11 @@ USchemaDatabase* InitialiseSchemaDatabase(const FString& PackagePath)
 	for (const auto& WellKnownComponent : SpatialConstants::ServerAuthorityWellKnownComponents)
 	{
 		SchemaDatabase->ComponentSetIdToComponentIds.FindOrAdd(SpatialConstants::SERVER_AUTH_COMPONENT_SET_ID)
+			.ComponentIDs.Push(WellKnownComponent.Key);
+	}
+	for (const auto& WellKnownComponent : SpatialConstants::RoutingWorkerComponents)
+	{
+		SchemaDatabase->ComponentSetIdToComponentIds.FindOrAdd(SpatialConstants::ROUTING_WORKER_AUTH_COMPONENT_SET_ID)
 			.ComponentIDs.Push(WellKnownComponent.Key);
 	}
 	for (const auto& WellKnownComponent : SpatialConstants::ClientAuthorityWellKnownComponents)
@@ -1387,6 +1428,7 @@ bool SpatialGDKGenerateSchema()
 	// We construct the list of all server authoritative components while writing the file.
 	TArray<Worker_ComponentId> GeneratedServerAuthoritativeComponentIds{};
 	WriteServerAuthorityComponentSet(SchemaDatabase, GeneratedServerAuthoritativeComponentIds);
+	WriteRoutingWorkerAuthorityComponentSet();
 	WriteClientAuthorityComponentSet();
 	WriteComponentSetBySchemaType(SchemaDatabase, SCHEMA_Data);
 	WriteComponentSetBySchemaType(SchemaDatabase, SCHEMA_OwnerOnly);
