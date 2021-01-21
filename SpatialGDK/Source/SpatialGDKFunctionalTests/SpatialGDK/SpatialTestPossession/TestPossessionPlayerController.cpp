@@ -17,6 +17,7 @@ int32 ATestPossessionPlayerController::OnPossessCalled = 0;
 ATestPossessionPlayerController::ATestPossessionPlayerController()
 	: BeforePossessionWorkerId(SpatialConstants::INVALID_VIRTUAL_WORKER_ID)
 	, AfterPossessionWorkerId(SpatialConstants::INVALID_VIRTUAL_WORKER_ID)
+	, LockToken(SpatialConstants::INVALID_ACTOR_LOCK_TOKEN)
 {
 }
 
@@ -51,10 +52,20 @@ void ATestPossessionPlayerController::RemotePossessOnClient_Implementation(APawn
 		USpatialNetDriver* NetDriver = Cast<USpatialNetDriver>(GetNetDriver());
 		if (NetDriver != nullptr && NetDriver->LockingPolicy)
 		{
-			NetDriver->LockingPolicy->AcquireLock(this, TEXT("TestLock"));
+			LockToken = NetDriver->LockingPolicy->AcquireLock(this, TEXT("TestLock"));
 		}
 	}
 	RemotePossessOnServer(InPawn);
+}
+
+
+void ATestPossessionPlayerController::ReleaseLock()
+{
+	USpatialNetDriver* NetDriver = Cast<USpatialNetDriver>(GetNetDriver());
+	if (NetDriver != nullptr && NetDriver->LockingPolicy)
+	{
+		NetDriver->LockingPolicy->ReleaseLock(LockToken);
+	}
 }
 
 void ATestPossessionPlayerController::RemotePossessOnServer(APawn* InPawn)

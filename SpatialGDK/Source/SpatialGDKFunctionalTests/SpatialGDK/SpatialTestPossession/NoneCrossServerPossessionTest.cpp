@@ -75,6 +75,7 @@ void ANoneCrossServerPossessionTest::PrepareTest()
 					if (PlayerController && PlayerController->HasAuthority())
 					{
 						AssertFalse(PlayerController->IsMigration(), TEXT("PlayerController shouldn't migration"), PlayerController);
+						PlayerController->UnPossess();
 					}
 				}
 			}

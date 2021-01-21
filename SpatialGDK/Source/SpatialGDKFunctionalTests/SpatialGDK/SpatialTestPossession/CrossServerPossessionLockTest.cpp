@@ -39,7 +39,7 @@ void ACrossServerPossessionLockTest::PrepareTest()
 {
 	Super::PrepareTest();
 
-	AddStep(TEXT("Controller remote possess"), FWorkerDefinition::AllClients, nullptr, nullptr, [this](float DeltaTime) {
+	AddStep(TEXT("Locked Controller remote possess"), FWorkerDefinition::AllClients, nullptr, nullptr, [this](float DeltaTime) {
 		ATestPossessionPawn* Pawn = GetPawn();
 		AssertIsValid(Pawn, TEXT("Test requires a Pawn"));
 		for (ASpatialFunctionalTestFlowController* FlowController : GetFlowControllers())
@@ -62,6 +62,21 @@ void ACrossServerPossessionLockTest::PrepareTest()
 		ATestPossessionPawn* Pawn = GetPawn();
 		AssertIsValid(Pawn, TEXT("Test requires a Pawn"));
 		AssertTrue(Pawn->GetController() == nullptr, TEXT("Pawn shouldn't have a controller"), Pawn);
+		FinishStep();
+	});
+
+	AddStep(TEXT("Release Lock of Controller"), FWorkerDefinition::AllServers, nullptr, nullptr, [this](float) {
+		for (ASpatialFunctionalTestFlowController* FlowController : GetFlowControllers())
+		{
+			if (FlowController->WorkerDefinition.Type == ESpatialFunctionalTestWorkerType::Client)
+			{
+				ATestPossessionPlayerController* Controller = Cast<ATestPossessionPlayerController>(FlowController->GetOwner());
+				if (Controller != nullptr && Controller->HasAuthority())
+				{
+					Controller->ReleaseLock();
+				}
+			}
+		}
 		FinishStep();
 	});
 }

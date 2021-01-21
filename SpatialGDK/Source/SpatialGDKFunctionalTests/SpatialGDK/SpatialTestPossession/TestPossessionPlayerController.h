@@ -22,6 +22,8 @@ public:
 
 	void RemotePossessOnServer(APawn* InPawn);
 
+	void ReleaseLock();
+
 	UFUNCTION(Server, Reliable)
 	void RemotePossessOnClient(APawn* InPawn, bool bLockBefore);
 
@@ -36,4 +38,6 @@ private:
 
 	VirtualWorkerId BeforePossessionWorkerId;
 	VirtualWorkerId AfterPossessionWorkerId;
+
+	ActorLockToken LockToken;
 };

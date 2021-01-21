@@ -63,6 +63,7 @@ void ACrossServerPossessionTest::PrepareTest()
 	AddStep(
 		TEXT("Check test result"), FWorkerDefinition::Server(1),
 		[this]() -> bool {
+			LogStep(ELogVerbosity::Log, FString::Printf(TEXT("OnPossessCalled:%d"), ATestPossessionPlayerController::OnPossessCalled));
 			return ATestPossessionPlayerController::OnPossessCalled >= 1;
 		},
 		nullptr,
@@ -75,6 +76,8 @@ void ACrossServerPossessionTest::PrepareTest()
 					if (PlayerController && PlayerController->HasAuthority())
 					{
 						AssertTrue(PlayerController->IsMigration(), TEXT("PlayerController should migration"), PlayerController);
+
+						PlayerController->UnPossess();
 					}
 				}
 			}

@@ -32,9 +32,12 @@ void ASpatialTestRemotePossession::PrepareTest()
 	});
 
 	AddStep(TEXT("Create Pawn"), FWorkerDefinition::Server(1), nullptr, nullptr, [this](float DeltaTime) {
-		ATestPossessionPawn* Pawn =
-			GetWorld()->SpawnActor<ATestPossessionPawn>(LocationOfPawn, FRotator::ZeroRotator, FActorSpawnParameters());
-		RegisterAutoDestroyActor(Pawn);
+		ATestPossessionPawn* Pawn = GetPawn();
+		if (Pawn == nullptr)
+		{
+			Pawn = GetWorld()->SpawnActor<ATestPossessionPawn>(LocationOfPawn, FRotator::ZeroRotator, FActorSpawnParameters());
+			RegisterAutoDestroyActor(Pawn);
+		}
 		FinishStep();
 	});
 
