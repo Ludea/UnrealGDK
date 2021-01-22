@@ -6,8 +6,8 @@
 #include "EngineClasses/SpatialNetDriver.h"
 #include "GameFramework/Controller.h"
 #include "SpatialFunctionalTestFlowController.h"
-#include "TestPossessionPawn.h"
 #include "TestPossessionController.h"
+#include "TestPossessionPawn.h"
 
 /**
  * This test tests 1 Controller possess over 1 Pawn.

@@ -7,12 +7,12 @@
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/PlayerController.h"
 #include "GameMapsSettings.h"
+#include "Kismet/GameplayStatics.h"
 #include "SpatialFunctionalTestFlowController.h"
 #include "SpatialGDKFunctionalTests/SpatialGDK/TestActors/TestMovementCharacter.h"
-#include "TestPossessionPawn.h"
 #include "TestPossessionController.h"
+#include "TestPossessionPawn.h"
 #include "Utils/SpatialStatics.h"
-#include "Kismet/GameplayStatics.h"
 
 /**
  * This test tests multi Controllers remote possess over 1 Pawn.

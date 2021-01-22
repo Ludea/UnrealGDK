@@ -31,6 +31,7 @@ public:
 	void AddWaitStep(const FWorkerDefinition& Worker);
 
 	void AddCleanStep();
+
 protected:
 	float WaitTime;
 	const static float MaxWaitTime;

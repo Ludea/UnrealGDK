@@ -3,8 +3,8 @@
 #include "SpatialTestRemotePossession.h"
 
 #include "Kismet/GameplayStatics.h"
-#include "TestPossessionPawn.h"
 #include "TestPossessionController.h"
+#include "TestPossessionPawn.h"
 
 const float ASpatialTestRemotePossession::MaxWaitTime = 2.0f;
 
@@ -79,7 +79,7 @@ void ASpatialTestRemotePossession::AddWaitStep(const FWorkerDefinition& Worker)
 
 void ASpatialTestRemotePossession::AddCleanStep()
 {
-	AddStep(TEXT("Clean"), FWorkerDefinition::AllServers, nullptr, nullptr, [this](float) {		
+	AddStep(TEXT("Clean"), FWorkerDefinition::AllServers, nullptr, nullptr, [this](float) {
 		if (ASpatialFunctionalTestFlowController* FlowController = GetLocalFlowController())
 		{
 			ATestPossessionPawn* Pawn = GetPawn();

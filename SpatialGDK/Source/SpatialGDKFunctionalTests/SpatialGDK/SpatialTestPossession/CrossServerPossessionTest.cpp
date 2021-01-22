@@ -7,8 +7,8 @@
 #include "GameFramework/Controller.h"
 #include "SpatialFunctionalTestFlowController.h"
 #include "SpatialGDKFunctionalTests/SpatialGDK/TestActors/TestMovementCharacter.h"
-#include "TestPossessionPawn.h"
 #include "TestPossessionController.h"
+#include "TestPossessionPawn.h"
 
 /**
  * This test tests 1 Controller remote possess over 1 Pawn.

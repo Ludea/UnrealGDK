@@ -5,8 +5,8 @@
 #include "GameFramework/PlayerController.h"
 #include "Net/UnrealNetwork.h"
 #include "SpatialFunctionalTestFlowController.h"
-#include "TestPossessionPawn.h"
 #include "TestPossessionController.h"
+#include "TestPossessionPawn.h"
 
 /**
  * This test tests 1 locked Controller remote possess over 1 pawn.
