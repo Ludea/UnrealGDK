@@ -41,7 +41,7 @@ public:
 	virtual void FlushDormancy(class AActor* Actor) override;
 
 	virtual bool IsReplayConnection() const override { return false; }
-	
+
 	virtual void OnAuthorityLost() override;
 
 	// These functions don't make a lot of sense in a SpatialOS implementation.
