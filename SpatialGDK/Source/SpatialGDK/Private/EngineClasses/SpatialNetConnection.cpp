@@ -67,6 +67,12 @@ void USpatialNetConnection::InitBase(UNetDriver* InDriver, class FSocket* InSock
 	}
 }
 
+void USpatialNetConnection::OnAuthorityLost()
+{
+	Super::OnAuthorityLost();
+	DisableHeartbeat();
+}
+
 void USpatialNetConnection::LowLevelSend(void* Data, int32 CountBits, FOutPacketTraits& Traits)
 {
 	// Intentionally does not call Super::
@@ -194,6 +200,8 @@ void USpatialNetConnection::DisableHeartbeat()
 	// Remove the heartbeat callback
 	if (TimerManager != nullptr && HeartbeatTimer.IsValid())
 	{
+		UE_LOG(LogSpatialNetConnection, Log, TEXT("Clear Heartbeat NetConnection %s, PlayerController entity %lld"), *GetName(),
+			   PlayerControllerEntity);
 		TimerManager->ClearTimer(HeartbeatTimer);
 	}
 	PlayerControllerEntity = SpatialConstants::INVALID_ENTITY_ID;
