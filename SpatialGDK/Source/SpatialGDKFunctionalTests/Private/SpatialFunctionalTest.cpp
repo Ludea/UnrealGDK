@@ -357,20 +357,20 @@ void ASpatialFunctionalTest::FinishTest(EFunctionalTestResult TestResult, const 
 					// If this timer triggers, then it means that something went wrong with one of the Workers. The
 					// expected behaviour is that the Super::FinishTest will be called from Tick(). Let's double check
 					// which failed to reply.
-					//FString WorkersDidntAck;
-					//for (const auto* FlowController : FlowControllers)
-					//{
-					//	if (!FlowController->HasAckFinishedTest())
-					//	{
-					//		WorkersDidntAck += FString::Printf(TEXT("%s, "), *(FlowController->GetDisplayName()));
-					//	}
-					//}
-					//if (!WorkersDidntAck.IsEmpty())
-					//{
-					//	WorkersDidntAck.RemoveFromEnd(TEXT(", "));
-					//	UE_LOG(LogSpatialGDKFunctionalTests, Warning,
-					//		   TEXT("The following Workers failed to acknowledge FinishTest in time: %s"), *WorkersDidntAck);
-					//}
+					 FString WorkersDidntAck;
+					 for (const auto* FlowController : FlowControllers)
+					{
+						if (!FlowController->HasAckFinishedTest())
+						{
+							WorkersDidntAck += FString::Printf(TEXT("%s, "), *(FlowController->GetDisplayName()));
+						}
+					}
+					 if (!WorkersDidntAck.IsEmpty())
+					{
+						WorkersDidntAck.RemoveFromEnd(TEXT(", "));
+						UE_LOG(LogSpatialGDKFunctionalTests, Warning,
+							   TEXT("The following Workers failed to acknowledge FinishTest in time: %s"), *WorkersDidntAck);
+					}
 
 					Super::FinishTest(CachedTestResult, CachedTestMessage);
 
