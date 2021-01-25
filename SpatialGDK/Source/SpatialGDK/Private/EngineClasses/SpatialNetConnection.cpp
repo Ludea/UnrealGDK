@@ -33,6 +33,7 @@ USpatialNetConnection::USpatialNetConnection(const FObjectInitializer& ObjectIni
 
 void USpatialNetConnection::BeginDestroy()
 {
+	UE_LOG(LogSpatialNetConnection, Log, TEXT("BeginDestroy %s, PlayerController entity %lld"), *GetName(), PlayerControllerEntity);
 	DisableHeartbeat();
 
 	Super::BeginDestroy();
@@ -70,7 +71,7 @@ void USpatialNetConnection::InitBase(UNetDriver* InDriver, class FSocket* InSock
 void USpatialNetConnection::OnAuthorityLost()
 {
 	Super::OnAuthorityLost();
-	DisableHeartbeat();
+	//DisableHeartbeat();
 }
 
 void USpatialNetConnection::LowLevelSend(void* Data, int32 CountBits, FOutPacketTraits& Traits)
@@ -200,7 +201,7 @@ void USpatialNetConnection::DisableHeartbeat()
 	// Remove the heartbeat callback
 	if (TimerManager != nullptr && HeartbeatTimer.IsValid())
 	{
-		UE_LOG(LogSpatialNetConnection, Log, TEXT("Clear Heartbeat NetConnection %s, PlayerController entity %lld"), *GetName(),
+		UE_LOG(LogSpatialNetConnection, Log, TEXT("Clear Heartbeat Timer %s, PlayerController entity %lld"), *GetName(),
 			   PlayerControllerEntity);
 		TimerManager->ClearTimer(HeartbeatTimer);
 	}
@@ -244,5 +245,7 @@ void USpatialNetConnection::ClientNotifyClientHasQuit()
 void USpatialNetConnection::OnControllerDestroyed(AActor* /*DestroyedActor*/)
 {
 	// Controller destroyed, prevent future heartbeat updates
+	UE_LOG(LogSpatialNetConnection, Log, TEXT("%s OnControllerDestroyed(%s) PlayerController entity %lld"), *GetName(),
+		   *AActor->GetName(), PlayerControllerEntity);
 	DisableHeartbeat();
 }

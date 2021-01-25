@@ -675,6 +675,7 @@ void ActorSystem::HandlePlayerLifecycleAuthority(const Worker_EntityId EntityId,
 					// TODO: Do we need this map? Can just check spatial view
 					AuthorityPlayerControllerConnectionMap.Add(EntityId, Connection);
 				}
+				UE_LOG(LogActorSystem, Log, TEXT("InitHeartbeat for PlayerController %s."), *AActor::GetDebugName(PlayerController));
 				Connection->InitHeartbeat(TimerManager, EntityId);
 			}
 		}
@@ -686,6 +687,8 @@ void ActorSystem::HandlePlayerLifecycleAuthority(const Worker_EntityId EntityId,
 			}
 			if (USpatialNetConnection* Connection = Cast<USpatialNetConnection>(PlayerController->GetNetConnection()))
 			{
+				UE_LOG(LogActorSystem, Log, TEXT("DisableHeartbeat for PlayerController %s."),
+					   *AActor::GetDebugName(PlayerController));
 				Connection->DisableHeartbeat();
 			}
 		}
