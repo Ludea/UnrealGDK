@@ -687,8 +687,7 @@ void ActorSystem::HandlePlayerLifecycleAuthority(const Worker_EntityId EntityId,
 			}
 			if (USpatialNetConnection* Connection = Cast<USpatialNetConnection>(PlayerController->GetNetConnection()))
 			{
-				UE_LOG(LogActorSystem, Log, TEXT("DisableHeartbeat for PlayerController %s."),
-					   *AActor::GetDebugName(PlayerController));
+				UE_LOG(LogActorSystem, Log, TEXT("DisableHeartbeat for PlayerController %s."), *AActor::GetDebugName(PlayerController));
 				Connection->DisableHeartbeat();
 			}
 		}

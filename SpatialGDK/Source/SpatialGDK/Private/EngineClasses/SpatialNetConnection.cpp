@@ -68,11 +68,11 @@ void USpatialNetConnection::InitBase(UNetDriver* InDriver, class FSocket* InSock
 	}
 }
 
-void USpatialNetConnection::OnAuthorityLost()
-{
-	Super::OnAuthorityLost();
-	//DisableHeartbeat();
-}
+//void USpatialNetConnection::OnAuthorityLost()
+//{
+//	Super::OnAuthorityLost();
+//	// DisableHeartbeat();
+//}
 
 void USpatialNetConnection::LowLevelSend(void* Data, int32 CountBits, FOutPacketTraits& Traits)
 {
@@ -245,7 +245,7 @@ void USpatialNetConnection::ClientNotifyClientHasQuit()
 void USpatialNetConnection::OnControllerDestroyed(AActor* /*DestroyedActor*/)
 {
 	// Controller destroyed, prevent future heartbeat updates
-	UE_LOG(LogSpatialNetConnection, Log, TEXT("%s OnControllerDestroyed(%s) PlayerController entity %lld"), *GetName(),
-		   *AActor->GetName(), PlayerControllerEntity);
+	UE_LOG(LogSpatialNetConnection, Log, TEXT("%s OnControllerDestroyed(%s) PlayerController entity %lld"), *GetName(), *AActor->GetName(),
+		   PlayerControllerEntity);
 	DisableHeartbeat();
 }

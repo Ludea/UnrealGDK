@@ -42,7 +42,7 @@ public:
 
 	virtual bool IsReplayConnection() const override { return false; }
 
-	virtual void OnAuthorityLost() override;
+	//virtual void OnAuthorityLost() override;
 
 	// These functions don't make a lot of sense in a SpatialOS implementation.
 	virtual FString LowLevelGetRemoteAddress(bool bAppendPort = false) override { return TEXT(""); }
