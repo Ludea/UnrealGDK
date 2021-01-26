@@ -145,8 +145,8 @@ void USpatialNetConnection::SetHeartbeatTimeoutTimer()
 	Timeout = GetDefault<USpatialGDKSettings>()->HeartbeatTimeoutWithEditorSeconds;
 #endif
 
-	UE_LOG(LogSpatialNetConnection, Log, TEXT("InitHeartbeat for PlayerController %s entity %lld"),
-		   *AActor::GetDebugName(PlayerController), PlayerControllerEntity);
+	UE_LOG(LogSpatialNetConnection, Log, TEXT("InitHeartbeat for PlayerController %s entity %lld"), *AActor::GetDebugName(PlayerController),
+		   PlayerControllerEntity);
 
 	TimerManager->SetTimer(
 		HeartbeatTimer,
@@ -154,8 +154,7 @@ void USpatialNetConnection::SetHeartbeatTimeoutTimer()
 			if (USpatialNetConnection* Connection = WeakThis.Get())
 			{
 				// This client timed out. Disconnect it and trigger OnDisconnected logic.
-				UE_LOG(LogSpatialNetConnection, Warning,
-					   TEXT("Client timed out - destroying connection: PlayerController %s entity %lld"),
+				UE_LOG(LogSpatialNetConnection, Warning, TEXT("Client timed out - destroying connection: PlayerController %s entity %lld"),
 					   *AActor::GetDebugName(Connection->PlayerController), Connection->PlayerControllerEntity);
 				Connection->CleanUp();
 			}
