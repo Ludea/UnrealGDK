@@ -122,15 +122,15 @@ void USpatialNetConnection::FlushDormancy(AActor* Actor)
 
 void USpatialNetConnection::InitHeartbeat(FTimerManager* InTimerManager, Worker_EntityId InPlayerControllerEntity)
 {
-	UE_LOG(LogSpatialNetConnection, Log, TEXT("Init Heartbeat component: NetConnection %s, PlayerController entity %lld"), *GetName(),
-		   InPlayerControllerEntity);
-
 	PlayerControllerEntity = InPlayerControllerEntity;
 	TimerManager = InTimerManager;
 
 	if (Driver->IsServer())
 	{
-		SetHeartbeatTimeoutTimer();
+		if (PlayerController->HasAuthority())
+		{
+			SetHeartbeatTimeoutTimer();
+		}
 	}
 	else
 	{
@@ -145,6 +145,9 @@ void USpatialNetConnection::SetHeartbeatTimeoutTimer()
 	Timeout = GetDefault<USpatialGDKSettings>()->HeartbeatTimeoutWithEditorSeconds;
 #endif
 
+	UE_LOG(LogSpatialNetConnection, Log, TEXT("InitHeartbeat for PlayerController %s entity %lld"),
+		   *AActor::GetDebugName(PlayerController), PlayerControllerEntity);
+
 	TimerManager->SetTimer(
 		HeartbeatTimer,
 		[WeakThis = TWeakObjectPtr<USpatialNetConnection>(this)]() {
@@ -152,8 +155,8 @@ void USpatialNetConnection::SetHeartbeatTimeoutTimer()
 			{
 				// This client timed out. Disconnect it and trigger OnDisconnected logic.
 				UE_LOG(LogSpatialNetConnection, Warning,
-					   TEXT("Client timed out - destroying connection: NetConnection %s, PlayerController entity %lld"),
-					   *Connection->GetName(), Connection->PlayerControllerEntity);
+					   TEXT("Client timed out - destroying connection: PlayerController %s entity %lld"),
+					   *AActor::GetDebugName(Connection->PlayerController), Connection->PlayerControllerEntity);
 				Connection->CleanUp();
 			}
 		},
@@ -194,6 +197,8 @@ void USpatialNetConnection::DisableHeartbeat()
 	// Remove the heartbeat callback
 	if (TimerManager != nullptr && HeartbeatTimer.IsValid())
 	{
+		UE_LOG(LogSpatialNetConnection, Log, TEXT("DisableHeartbeat for PlayerController %s entity:%lld."),
+			   *AActor::GetDebugName(PlayerController), PlayerControllerEntity);
 		TimerManager->ClearTimer(HeartbeatTimer);
 	}
 	PlayerControllerEntity = SpatialConstants::INVALID_ENTITY_ID;
