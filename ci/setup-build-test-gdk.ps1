@@ -54,7 +54,7 @@ class TestSuite {
 [string] $user_cmd_line_args = "$env:TEST_ARGS"
 [string] $gdk_branch = "$env:BUILDKITE_BRANCH"
 
-[TestProjectTarget] $gdk_test_project = [TestProjectTarget]::new("git@github.com:spatialos/UnrealGDKTestGyms.git", $gdk_branch, "Game\GDKTestGyms.uproject", "GDKTestGyms")
+[TestProjectTarget] $gdk_test_project = [TestProjectTarget]::new("git@github.com:improbable/UnrealGDKEngineNetTest.git", $gdk_branch, "Game\EngineNetTest.uproject", "NetworkTestProject")
 [TestProjectTarget] $native_test_project = [TestProjectTarget]::new("git@github.com:improbable/UnrealGDKEngineNetTest.git", $gdk_branch, "Game\EngineNetTest.uproject", "NativeNetworkTestProject")
 
 # Allow overriding testing branch via environment variable
