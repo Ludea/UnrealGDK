@@ -658,8 +658,8 @@ void ActorSystem::HandleDeferredEntityDeletion(const DeferredRetire& Retire) con
 void ActorSystem::HandlePlayerLifecycleAuthority(const Worker_EntityId EntityId, const Worker_ComponentSetId ComponentSetId,
 												 const Worker_Authority Authority, APlayerController* PlayerController)
 {
-	UE_LOG(LogActorSystem, Verbose, TEXT("HandlePlayerLifecycleAuthority for PlayerController %s."),
-		   *AActor::GetDebugName(PlayerController));
+	UE_LOG(LogActorSystem, Log, TEXT("HandlePlayerLifecycleAuthority for PlayerController %s Authority:%d."),
+		   *AActor::GetDebugName(PlayerController), PlayerController->HasAuthority());
 
 	// Server initializes heartbeat logic based on its authority over the server auth component set,
 	// client does the same for client auth component set
@@ -675,6 +675,8 @@ void ActorSystem::HandlePlayerLifecycleAuthority(const Worker_EntityId EntityId,
 					// TODO: Do we need this map? Can just check spatial view
 					AuthorityPlayerControllerConnectionMap.Add(EntityId, Connection);
 				}
+				UE_LOG(LogActorSystem, Log, TEXT("InitHeartbeat for PlayerController %s Authority:%d."),
+					   *AActor::GetDebugName(PlayerController), PlayerController->HasAuthority());
 				Connection->InitHeartbeat(TimerManager, EntityId);
 			}
 		}
@@ -686,6 +688,8 @@ void ActorSystem::HandlePlayerLifecycleAuthority(const Worker_EntityId EntityId,
 			}
 			if (USpatialNetConnection* Connection = Cast<USpatialNetConnection>(PlayerController->GetNetConnection()))
 			{
+				UE_LOG(LogActorSystem, Log, TEXT("DisableHeartbeat for PlayerController %s Authority:%d."),
+					   *AActor::GetDebugName(PlayerController), PlayerController->HasAuthority());
 				Connection->DisableHeartbeat();
 			}
 		}
