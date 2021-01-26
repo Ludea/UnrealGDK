@@ -40,11 +40,13 @@ void USpatialNetConnection::BeginDestroy()
 
 void USpatialNetConnection::CleanUp()
 {
+	UE_LOG(LogSpatialNetConnection, Log, TEXT("USpatialNetConnection CleanUp PlayerController %s entity %lld"),
+		   *AActor::GetDebugName(PlayerController), PlayerControllerEntity);
 	if (USpatialNetDriver* SpatialNetDriver = Cast<USpatialNetDriver>(Driver))
 	{
 		SpatialNetDriver->CleanUpClientConnection(this);
 	}
-
+	DisableHeartbeat();
 	Super::CleanUp();
 }
 
