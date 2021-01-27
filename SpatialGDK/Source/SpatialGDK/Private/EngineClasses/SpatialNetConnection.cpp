@@ -124,6 +124,8 @@ void USpatialNetConnection::FlushDormancy(AActor* Actor)
 
 void USpatialNetConnection::Init(const Worker_EntityId InPlayerControllerEntity)
 {
+	UE_LOG(LogSpatialNetConnection, Log, TEXT("Init Heartbeat component: PlayerController %s entity %lld"),
+		   *AActor::GetDebugName(PlayerController), InPlayerControllerEntity);
 	PlayerControllerEntity = InPlayerControllerEntity;
 }
 
@@ -133,9 +135,6 @@ void USpatialNetConnection::Disable()
 #if WITH_EDITOR
 	Timeout = GetDefault<USpatialGDKSettings>()->HeartbeatTimeoutWithEditorSeconds;
 #endif
-
-	UE_LOG(LogSpatialNetConnection, Log, TEXT("InitHeartbeat for PlayerController %s entity %lld"), *AActor::GetDebugName(PlayerController),
-		   PlayerControllerEntity);
 
 	TimerManager->SetTimer(
 		HeartbeatTimer,
