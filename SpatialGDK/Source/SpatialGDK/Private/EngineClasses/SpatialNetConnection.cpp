@@ -40,11 +40,13 @@ void USpatialNetConnection::BeginDestroy()
 
 void USpatialNetConnection::CleanUp()
 {
+	UE_LOG(LogSpatialNetConnection, Log, TEXT("USpatialNetConnection CleanUp PlayerController %s entity %lld"),
+		   *AActor::GetDebugName(PlayerController), PlayerControllerEntity);
 	if (USpatialNetDriver* SpatialNetDriver = Cast<USpatialNetDriver>(Driver))
 	{
 		SpatialNetDriver->ClientConnectionManager->CleanUpClientConnection(this);
 	}
-
+	DisableHeartbeat();
 	Super::CleanUp();
 }
 
@@ -127,6 +129,66 @@ void USpatialNetConnection::Init(const Worker_EntityId InPlayerControllerEntity)
 
 void USpatialNetConnection::Disable()
 {
+	float Timeout = GetDefault<USpatialGDKSettings>()->HeartbeatTimeoutSeconds;
+#if WITH_EDITOR
+	Timeout = GetDefault<USpatialGDKSettings>()->HeartbeatTimeoutWithEditorSeconds;
+#endif
+
+	UE_LOG(LogSpatialNetConnection, Log, TEXT("InitHeartbeat for PlayerController %s entity %lld"), *AActor::GetDebugName(PlayerController),
+		   PlayerControllerEntity);
+
+	TimerManager->SetTimer(
+		HeartbeatTimer,
+		[WeakThis = TWeakObjectPtr<USpatialNetConnection>(this)]() {
+			if (USpatialNetConnection* Connection = WeakThis.Get())
+			{
+				// This client timed out. Disconnect it and trigger OnDisconnected logic.
+				UE_LOG(LogSpatialNetConnection, Warning, TEXT("Client timed out - destroying connection: PlayerController %s entity %lld"),
+					   *AActor::GetDebugName(Connection->PlayerController), Connection->PlayerControllerEntity);
+				Connection->CleanUp();
+			}
+		},
+		Timeout, false);
+}
+
+void USpatialNetConnection::SetHeartbeatEventTimer()
+{
+	TimerManager->SetTimer(
+		HeartbeatTimer,
+		[WeakThis = TWeakObjectPtr<USpatialNetConnection>(this)]() {
+			if (USpatialNetConnection* Connection = WeakThis.Get())
+			{
+				FWorkerComponentUpdate ComponentUpdate = {};
+
+				ComponentUpdate.component_id = SpatialConstants::HEARTBEAT_COMPONENT_ID;
+				ComponentUpdate.schema_type = Schema_CreateComponentUpdate();
+				Schema_Object* EventsObject = Schema_GetComponentUpdateEvents(ComponentUpdate.schema_type);
+				Schema_AddObject(EventsObject, SpatialConstants::HEARTBEAT_EVENT_ID);
+
+				USpatialWorkerConnection* WorkerConnection = Cast<USpatialNetDriver>(Connection->Driver)->Connection;
+				if (WorkerConnection != nullptr)
+				{
+					WorkerConnection->SendComponentUpdate(Connection->PlayerControllerEntity, &ComponentUpdate);
+				}
+			}
+		},
+		GetDefault<USpatialGDKSettings>()->HeartbeatIntervalSeconds, true, 0.0f);
+
+	if (PlayerController != nullptr)
+	{
+		PlayerController->OnDestroyed.AddDynamic(this, &USpatialNetConnection::OnControllerDestroyed);
+	}
+}
+
+void USpatialNetConnection::DisableHeartbeat()
+{
+	// Remove the heartbeat callback
+	if (TimerManager != nullptr && HeartbeatTimer.IsValid())
+	{
+		UE_LOG(LogSpatialNetConnection, Log, TEXT("DisableHeartbeat for PlayerController %s entity:%lld."),
+			   *AActor::GetDebugName(PlayerController), PlayerControllerEntity);
+		TimerManager->ClearTimer(HeartbeatTimer);
+	}
 	PlayerControllerEntity = SpatialConstants::INVALID_ENTITY_ID;
 }
 
