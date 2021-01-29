@@ -42,6 +42,11 @@ void USpatialNetConnection::CleanUp()
 {
 	UE_LOG(LogSpatialNetConnection, Log, TEXT("USpatialNetConnection CleanUp PlayerController %s entity %lld"),
 		   *AActor::GetDebugName(PlayerController), PlayerControllerEntity);
+	if (HeartbeatTimer.IsValid())
+	{
+		UE_LOG(LogSpatialNetConnection, Fatal, TEXT("CleanUp before timer disabled"), *AActor::GetDebugName(PlayerController),
+			   PlayerControllerEntity);
+	}
 	if (USpatialNetDriver* SpatialNetDriver = Cast<USpatialNetDriver>(Driver))
 	{
 		SpatialNetDriver->ClientConnectionManager->CleanUpClientConnection(this);
