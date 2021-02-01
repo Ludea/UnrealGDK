@@ -1019,6 +1019,7 @@ void USpatialNetDriver::NotifyActorDestroyed(AActor* ThisActor, bool IsSeamlessT
 						   TEXT("Retiring dormant entity that we don't have spatial authority over [%lld][%s]"), EntityId,
 						   *ThisActor->GetName());
 				}
+				UE_LOG(LogSpatialOSNetDriver, Log, TEXT("NotifyActorDestroyed(%lld)"), EntityId);
 				Sender->RetireEntity(EntityId, ThisActor->IsNetStartupActor());
 			}
 		}
@@ -2676,6 +2677,7 @@ void USpatialNetDriver::DelayedRetireEntity(Worker_EntityId EntityId, float Dela
 	TimerManager.SetTimer(
 		RetryTimer,
 		[this, EntityId, bIsNetStartupActor]() {
+			UE_LOG(LogSpatialOSNetDriver, Log, TEXT("NotifyActorDestroyed(%lld)"), EntityId);
 			Sender->RetireEntity(EntityId, bIsNetStartupActor);
 		},
 		Delay, false);
